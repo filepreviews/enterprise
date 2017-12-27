@@ -28,6 +28,6 @@ variable "availability_zones" {
   default     = ["us-east-1a", "us-east-1b", "us-east-1c"]
 }
 
-variable "filepreviews_license_path" {
+variable "license_path" {
   description = "Path to FilePreviews license file"
 }

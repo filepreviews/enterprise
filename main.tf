@@ -43,7 +43,7 @@ module "s3" {
   source = "./modules/s3"
 
   name                      = "${var.name}"
-  filepreviews_license_path = "${var.filepreviews_license_path}"
+  filepreviews_license_path = "${var.license_path}"
 }
 
 module "sqs" {
