@@ -5,6 +5,11 @@ provider "aws" {
   region  = "${var.region}"
 }
 
+locals {
+  filepreviews_ami_id  = "ami-b7591acd"
+  filepreviews_version = "1.2.0"
+}
+
 resource "random_string" "secret_key" {
   length  = 50
   special = true
@@ -71,8 +76,8 @@ module "web" {
   alb_security_group     = "${module.security_groups.web_lb}"
   cluster_security_group = "${module.security_groups.web_cluster}"
 
-  filepreviews_ami_id      = "${var.filepreviews_ami_id}"
-  filepreviews_version     = "${var.filepreviews_version}"
+  filepreviews_ami_id      = "${local.filepreviews_ami_id}"
+  filepreviews_version     = "${local.filepreviews_version}"
   filepreviews_license_url = "${module.s3.license_url}"
   database_url             = "${module.database.url}"
   secret_key               = "${random_string.secret_key.result}"
@@ -88,8 +93,8 @@ module "worker" {
   task_role_arn          = "${module.iam_role.ecs_task_role_arn}"
   cluster_security_group = "${module.security_groups.worker_cluster}"
 
-  filepreviews_ami_id      = "${var.filepreviews_ami_id}"
-  filepreviews_version     = "${var.filepreviews_version}"
+  filepreviews_ami_id      = "${local.filepreviews_ami_id}"
+  filepreviews_version     = "${local.filepreviews_version}"
   filepreviews_license_url = "${module.s3.license_url}"
   database_url             = "${module.database.url}"
   secret_key               = "${random_string.secret_key.result}"
@@ -99,7 +104,7 @@ module "bastion" {
   source = "./modules/bastion"
 
   name                = "${var.name}"
-  filepreviews_ami_id = "${var.filepreviews_ami_id}"
+  filepreviews_ami_id = "${local.filepreviews_ami_id}"
   security_group      = "${module.security_groups.bastion_ssh}"
   subnet_id           = "${element(module.vpc.external_subnets, 0)}"
   enabled             = "false"
