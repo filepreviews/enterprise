@@ -1,8 +1,8 @@
 provider "aws" {
   version = "~> 1.6"
 
-  profile = "${var.profile}"
-  region  = "${var.region}"
+  profile = "${var.aws_profile}"
+  region  = "us-east-1"
 }
 
 locals {
