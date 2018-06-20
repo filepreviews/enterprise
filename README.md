@@ -20,7 +20,7 @@ Go to https://www.terraform.io/downloads.html for the available downloads for th
 
 ```
 module "filepreviews" {
-  source = "github.com/filepreviews/enterprise?ref=v1.4.0"
+  source = "github.com/filepreviews/enterprise?ref=v1.9.0"
 
   aws_profile  = "YOUR_AWS_PROFILE_NAME"
   license_key = "YOUR_FILEPREVIEWS_ENTERPRISE_LICENSE_KEY"
@@ -39,7 +39,7 @@ Provisioning will create every resource required to run FilePreviews Enterprise 
 - 1 m5.large EC2 instance
 - 1 c5.large EC2 instance
 - 1 db.t2.small RDS instance
-- 1 SQS queue
+- 1 cache.t2.medium Redis instance
 - 1 VPC
 - 2 Subnets
 - 1 NAT Gateway

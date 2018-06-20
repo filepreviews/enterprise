@@ -14,7 +14,7 @@ resource "aws_db_instance" "main" {
 
   # Database
   engine         = "postgres"
-  engine_version = "9.6.3"
+  engine_version = "9.6.6"
   username       = "${var.username}"
   password       = "${random_string.password.result}"
   name           = "${var.database}"

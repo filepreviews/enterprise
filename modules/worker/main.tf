@@ -2,12 +2,16 @@ data "template_file" "cloud_config" {
   template = "${file("${path.module}/files/cloud-config.yml.tpl")}"
 
   vars {
-    queue_name_prefix    = "${var.name}-"
-    filepreviews_version = "${var.filepreviews_version}"
-    license_key          = "${var.filepreviews_license_key}"
-    database_url         = "${var.database_url}"
-    secret_key           = "${var.secret_key}"
+    license_key  = "${var.filepreviews_license_key}"
+    database_url = "${var.database_url}"
+    redis_url    = "${var.redis_url}"
+    secret_key   = "${var.secret_key}"
+    domain_name  = "${var.domain_name}"
   }
+}
+
+locals {
+  cloud_config = "${var.cloud_config == "" ? data.template_file.cloud_config.rendered : var.cloud_config}"
 }
 
 resource "aws_launch_configuration" "main" {
@@ -17,7 +21,7 @@ resource "aws_launch_configuration" "main" {
   instance_type        = "c5.large"
   iam_instance_profile = "${var.iam_instance_profile}"
   security_groups      = ["${var.cluster_security_group}"]
-  user_data            = "${data.template_file.cloud_config.rendered}"
+  user_data            = "${local.cloud_config}"
 
   root_block_device {
     volume_type = "gp2"

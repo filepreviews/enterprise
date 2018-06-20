@@ -1,27 +1,14 @@
 #cloud-config
+write_files:
+  - path: /etc/filepreviews/config
+    permissions: 0644
+    content: |
+      DATABASE_URL=${database_url}
+      REDIS_URL=${redis_url}
+      SECRET_KEY=${secret_key}
+      LICENSE_KEY=${license_key}
+      SITE_DOMAIN=${domain_name}
 coreos:
   units:
-    - name: "filepreviews-web.service"
-      enable: true
+    - name: "filepreviews-enterprise-web.service"
       command: "start"
-      content: |
-        [Unit]
-        Description=FilePreviews Web
-        After=docker.service
-
-        [Service]
-        Restart=always
-        RestartSec=5s
-        ExecStartPre=-/usr/bin/docker kill filepreviews-web
-        ExecStartPre=-/usr/bin/docker rm filepreviews-web
-        ExecStart=/usr/bin/docker run --name filepreviews-web \
-          --network=filepreviews \
-          --publish=8000:8000 \
-          --env="DATABASE_URL=${database_url}" \
-          --env="SECRET_KEY=${secret_key}" \
-          --env="LICENSE_KEY=${license_key}" \
-          --env="QUEUE_NAME_PREFIX=${queue_name_prefix}" \
-          --env="FILEPREVIEWS_VERSION=${filepreviews_version}" \
-          filepreviews/filepreviews:${filepreviews_version} \
-          /app/docker/entrypoint.sh start-enterprise-server
-        ExecStop=/usr/bin/docker stop filepreviews-web

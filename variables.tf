@@ -37,3 +37,9 @@ variable "enable_bastion" {
   description = "Enable bastion for support."
   default     = false
 }
+
+variable "domain_name" {
+  description = "Domain name used to access the web interface and API."
+  type        = "string"
+  default     = ""
+}

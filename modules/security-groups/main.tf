@@ -110,6 +110,34 @@ resource "aws_security_group" "database" {
   }
 }
 
+resource "aws_security_group" "redis" {
+  name_prefix = "${var.name}-redis-"
+  description = "Allows traffic to Redis from other security groups"
+  vpc_id      = "${var.vpc_id}"
+
+  ingress {
+    from_port = 6379
+    to_port   = 6379
+    protocol  = "TCP"
+
+    security_groups = [
+      "${aws_security_group.web_cluster.id}",
+      "${aws_security_group.worker_cluster.id}",
+    ]
+  }
+
+  egress {
+    from_port   = 0
+    to_port     = 0
+    protocol    = -1
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  lifecycle {
+    create_before_destroy = true
+  }
+}
+
 resource "aws_security_group" "bastion_ssh" {
   name_prefix = "${var.name}-bastion-ssh-"
   description = "Allows SSH to bastion"
@@ -140,6 +168,10 @@ output "bastion_ssh" {
 
 output "database" {
   value = "${aws_security_group.database.id}"
+}
+
+output "redis" {
+  value = "${aws_security_group.redis.id}"
 }
 
 output "web_lb" {
